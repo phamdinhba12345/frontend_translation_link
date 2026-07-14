@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const maxDuration = 60; // Nới lỏng giới hạn timeout của Vercel (mặc định 15s, tối đa 60s cho gói Free)
+
 // Địa chỉ backend Flask (xem lại hướng dẫn chạy backend trong README)
 const BACKEND_URL =
   process.env.VIDEO_TRANSLATOR_BACKEND_URL || "http://127.0.0.1:5000";
