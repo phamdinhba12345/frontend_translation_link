@@ -10,7 +10,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const res = await fetch(`${BACKEND_URL}/translate`, {
+    const baseUrl = BACKEND_URL.replace(/\/$/, '');
+    const res = await fetch(`${baseUrl}/translate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -28,7 +29,8 @@ export async function POST(req: NextRequest) {
     // Backend trả đường dẫn tương đối (vd: /outputs/xxx.mp4) -> ghép thành URL đầy đủ
     // để trình duyệt (đang chạy ở origin khác, port 3000) có thể phát/tải video.
     if (data.dubbed_video_url) {
-      data.dubbed_video_url = `${BACKEND_URL}${data.dubbed_video_url}`;
+      const baseUrl = BACKEND_URL.replace(/\/$/, '');
+      data.dubbed_video_url = `${baseUrl}${data.dubbed_video_url}`;
     }
 
     return NextResponse.json(data);
