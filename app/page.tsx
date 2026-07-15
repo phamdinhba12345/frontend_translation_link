@@ -28,6 +28,7 @@ export default function VideoTranslatorPage() {
   const [lang, setLang] = useState("vi");
   const [customLang, setCustomLang] = useState("");
   const [dubVideo, setDubVideo] = useState(true);
+  const [originalAudioVolume, setOriginalAudioVolume] = useState(25); // 0-100%
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<TranslateResult | null>(null);
@@ -58,6 +59,8 @@ export default function VideoTranslatorPage() {
           url: url.trim(),
           target_lang: targetLang,
           dub_video: dubVideo,
+          keep_original_audio: originalAudioVolume > 0,
+          original_audio_volume: originalAudioVolume / 100,
         }),
       });
       const data = await res.json();
@@ -175,6 +178,32 @@ export default function VideoTranslatorPage() {
             />
             Lồng tiếng video (thay giọng gốc bằng giọng đọc bản dịch)
           </label>
+
+          {dubVideo && (
+            <div className="mb-5 pl-6">
+              <div className="flex justify-between text-sm text-slate-400 mb-2">
+                <label htmlFor="volume">Âm lượng tiếng gốc</label>
+                <span>
+                  {originalAudioVolume === 0
+                    ? "Tắt tiếng"
+                    : `${originalAudioVolume}%`}
+                </span>
+              </div>
+              <input
+                id="volume"
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={originalAudioVolume}
+                onChange={(e) => setOriginalAudioVolume(Number(e.target.value))}
+                className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-violet-500 hover:accent-violet-400"
+              />
+              <p className="text-xs text-slate-500 mt-1.5">
+                Kéo về 0 để tắt hẳn tiếng gốc, chỉ giữ lại giọng lồng tiếng.
+              </p>
+            </div>
+          )}
 
           <button
             onClick={handleSubmit}
